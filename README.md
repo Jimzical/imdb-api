@@ -1,2 +1,2 @@
 # imdb-api
-for streamlit
+for streamlit hackathon
