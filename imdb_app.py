@@ -7,8 +7,8 @@ st.title("Imdb API Connection Example")
 # read the api key from the secrets
 api = st.secrets["api_key"]
 
-# create an instance of UniProtAPIConnection
-uniprot_conn = OmdbAPIConnection("IMDB Connection", api_key=api)
+# create an instance of OmdbAPIConnection
+omdb_conn = OmdbAPIConnection("IMDB Connection", api_key=api)
 
 movie_name = st.text_input("Movie Name", value="Batman")
 
@@ -36,7 +36,7 @@ st.markdown(f'**Your query:** `{query}`')
 if st.button('Search'):
     try:
         # Get results and display them
-        df = uniprot_conn.query(query, full_information=full_info)
+        df = omdb_conn.query(query, full_information=full_info)
         st.data_editor(
             df,
             column_config={
