@@ -1,6 +1,7 @@
 # IMDB-api
 for streamlit hackathon
 uses the omdb api to get movie data
+https://imdb-api.streamlit.app/
 
 ## How to run
 1. Clone the repo
