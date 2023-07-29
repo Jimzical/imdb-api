@@ -11,4 +11,5 @@ uses the omdb api to get movie data
     ```
 4. Enjoy!
 
-
+## Screenshots
+![Screenshot 1](https://github.com/Jimzical/imdb-api/blob/media/homescreen.png?raw=true)
