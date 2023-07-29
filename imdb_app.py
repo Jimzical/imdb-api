@@ -37,8 +37,17 @@ if st.button('Search'):
     try:
         # Get results and display them
         df = uniprot_conn.query(query, full_information=full_info)
-        st.write(df)
-        # df, um = uniprot_conn.query(query)
-        # st.write(um)
+        st.data_editor(
+            df,
+            column_config={
+                
+            "Poster" : st.column_config.ImageColumn(
+                "Poster",
+                help="Poster"
+            )
+            }
+        )
+
+        # st.write(df)
     except Exception as e:
         st.error(f'API Error: {e}')

@@ -137,7 +137,6 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
                 result = pd.DataFrame(json.loads(response.text)["Search"])
 
             if full_information:
-                print("full information")   
                 for index, row in result.iterrows():
                     params = {}
                     params["apikey"] = self.api_key
