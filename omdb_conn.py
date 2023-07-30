@@ -50,36 +50,6 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
         session.mount("https://", HTTPAdapter(max_retries=self.retries))
         return session
 
-        def full_info(
-            self,
-            basic_df: pd.DataFrame,
-            **kwargs: Any
-            ) -> pd.DataFrame:
-            """
-            Gets the full information about the movie
-
-            Parameters:
-                basic_df (pd.DataFrame): The basic dataframe with the imdb ids
-                **kwargs (Any): Any additional arguments to pass to the query
-
-            Returns:
-                pd.DataFrame: The dataframe with the full information
-
-            """
-            for index, row in basic_df.iterrows():
-                params = {}
-                params["apikey"] = api
-                params["i"] = row["IMDb ID"]
-                response = requests.get(base_url, params=params)
-                response.raise_for_status()
-                json_response = json.loads(response.text)
-                for key in json_response:
-                    if key == "Response" or key =="Ratings":
-                        break
-                    basic_df.at[index, key] = json_response[key]
-
-            return basic_df
-
     def query(
         self, 
         query: str, 

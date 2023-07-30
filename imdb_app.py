@@ -87,6 +87,9 @@ with st.sidebar:
     st.session_state.add_page = st.checkbox("Filter Page")
     with st.expander("Advanced"):
         st.session_state.full_info = st.checkbox("Full Information", help="You may have to wait for some time" , on_change=st.cache_data.clear() )
+        if st.button("Clear Cache"):
+            st.cache_data.clear()
+            st.cache_resource.clear()
 
 
 # Query
