@@ -118,6 +118,10 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
             >>> imdb_conn = OmdbAPIConnection("IMDB Connection" , api_key = api)
             >>> query = f's=Batman&type=movie&y=2015&page=1' # Search for Batman and filter by type movie and year 2015 and page 1
             >>> df = imdb_conn.query(query)
+
+            >>> imdb_conn = OmdbAPIConnection("IMDB Connection" , api_key = api)
+            >>> query = f's=Batman&type=movie&y=2015&page=1' # Search for Batman and filter by type movie and year 2015 and page 1
+            >>> df = imdb_conn.query(query, full_information = True) # Get all the information about the movie
         """
 
 

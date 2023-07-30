@@ -2,23 +2,39 @@ import streamlit as st
 from omdb_conn import OmdbAPIConnection
 import pandas as pd
 
-# title
-st.title("Imdb API Connection Example")
 
-st.markdown(
-   '''
-    <h4>This is an example on how to use the OMDB Experimental Connector</h4>
-    <p>For more information on the OMDB API, please visit <a href="http://www.omdbapi.com/">API Docs</a></p>
-   '''
-    , unsafe_allow_html=True
+def colored_header(label: str = "Nice title",description: str = "",color_name = "gold",help = " ", description_help = " "):
+    """
+    Shows a header with a colored underline and an optional description.
+    """
+    st.title(
+        body=label,
+        help=help,
+    )
+    st.write(
+        f'<hr style="background-color: {color_name}; margin-top: 0;'
+        ' margin-bottom: 0; height: 3px; border: none; border-radius: 3px;">',
+        unsafe_allow_html=True,
+    )
+    if description:
+        st.caption(description,help=description_help)
+
+
+# set page config
+st.set_page_config(
+    page_title="OMDB Experimental Connector",
+    page_icon="🎬",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        "Get Help": "http://www.omdbapi.com/",
+        "Report a bug": "https://github.com/Jimzical/imdb-api/issues",
+        "About": " Using the st.experimental_connection to connect to the OMDB API for the Streamlit Hackathon",
+    }
 )
 
 
-
-# read the api key from the secrets
-api = st.secrets["api_key"]
-
-
+# initialize the session state
 if "data" not in st.session_state:
     st.session_state.data = pd.DataFrame()
 if "movie_name" not in st.session_state:
@@ -32,24 +48,48 @@ if "add_y" not in st.session_state:
 if "add_page" not in st.session_state:
     st.session_state.add_page = False
 
+# read the api key from the secrets
+api = st.secrets["api_key"]
 
 # create an instance of OmdbAPIConnection
 omdb_conn = OmdbAPIConnection("IMDB Connection", api_key=api)
 
+# Build the UI
+# title
+colored_header(
+    label="OMDB Experimental Connector",
+    color_name="gold",
+)
+st.markdown(
+   '''
+    <h4>This is an example on how to use the OMDB Experimental Connector</h4>
+    <p>For more information on the OMDB API, please visit <a href="http://www.omdbapi.com/">API Docs</a></p>
+   '''
+    , unsafe_allow_html=True
+)
+
+# Movie Name
 st.session_state.movie_name = st.text_input("Movie Name", value="Batman")
 
+# Filters
 with st.sidebar:
-    type = st.selectbox("Type", ["movie", "series", "episode"])
-    st.session_state.add_type = st.checkbox("Add Type")
+    colored_header(
+        label="Parameters",
+        description="Select the Parameters to Filter the Query",
+        color_name="gold",
+    )
+    type = st.selectbox("Type", ["Movie", "Series", "Episode"])
+    st.session_state.add_type = st.checkbox("Filter Type")
     y = st.number_input("Year", value=2015)
-    st.session_state.add_y = st.checkbox("Add Year")
+    st.session_state.add_y = st.checkbox("Filter Year")
     page = st.number_input("Page", value=1)
-    st.session_state.add_page = st.checkbox("Add Page")
+    st.session_state.add_page = st.checkbox("Filter Page")
     with st.expander("Advanced"):
         st.session_state.full_info = st.checkbox("Full Information", help="You may have to clear the cache to see the changes" , on_change=st.cache_data.clear() )
 
-query = f's={st.session_state.movie_name}'
 
+# Query
+query = f's={st.session_state.movie_name}'
 if st.session_state.add_type:
     query = query + f'&type={type}'
 if st.session_state.add_y:
@@ -59,12 +99,18 @@ if st.session_state.add_page:
 
 st.markdown(f'**Your query:** `{query}`')
 
+# Search Button
 if st.button('Search'):
     try:
         # Get results and display them
         df = omdb_conn.query(query, full_information=st.session_state.full_info)
-        tab1 , tab2 ,tab3 = st.tabs(["Data", "Raw Data", "Download Data"])
+        tab1 , tab2 ,tab3 = st.tabs(["Data", "Raw CSV Data", "Download Data"])
         if tab1:
+            colored_header(
+                label="Data",
+                color_name="gold",
+                help="The Dataframe with the results from the query"
+            )                
             st.data_editor(
                     df,
                     column_config={
@@ -92,10 +138,11 @@ if st.button('Search'):
     except Exception as e:
         st.error(f'API Error: {e}')
 
-with st.expander("omdb_conn.query Docstring"):
+# Code
+with st.expander("Query Docstring"):
     st.code(omdb_conn.query.__doc__)
 
-with st.expander("OmdbAPIConnection"):
+with st.expander("OmdbAPIConnection Source Code"):
     st.code(''' 
          from typing import Any,List
     import json
