@@ -108,7 +108,7 @@ if st.button('Search'):
     try:
         # Get results and display them
         df = omdb_conn.query(query, full_information=st.session_state.full_info)
-        tab1 , tab2 ,tab3 = st.tabs(["Data", "Raw CSV Data", "Download Data"])
+        tab1 , tab2 ,tab3 = st.tabs(["Data", "Raw CSV Data", "Download Data as CSV"])
         if tab1:
             colored_header(
                 label="Data",
@@ -123,7 +123,8 @@ if st.button('Search'):
                         "Poster",
                         help="Poster"
                     )
-                    }
+                    },
+                    use_container_width=True,
                 )
         with tab2:
             csv = df.to_csv(index=False)
@@ -131,7 +132,7 @@ if st.button('Search'):
         
         with tab3:
             st.download_button(
-                label="Download Data",
+                label="Download Data as CSV ⬇️",
                 data=csv,
                 file_name=f"{st.session_state.movie_name}_imdb_data.csv",
                 mime="text/csv",
