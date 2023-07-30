@@ -150,8 +150,9 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
                     json_response = json.loads(response.text)
                     for key in json_response:
                         if key == "Response" or key =="Ratings":
-                            break
-                        result.at[index, key] = json_response[key]
+                            continue
+                        else:
+                            result.at[index, key] = json_response[key]
 
 
             return result

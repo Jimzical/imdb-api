@@ -85,7 +85,7 @@ with st.sidebar:
     page = st.number_input("Page", value=1)
     st.session_state.add_page = st.checkbox("Filter Page")
     with st.expander("Advanced"):
-        st.session_state.full_info = st.checkbox("Full Information", help="You may have to clear the cache to see the changes" , on_change=st.cache_data.clear() )
+        st.session_state.full_info = st.checkbox("Full Information", help="You may have to wait for some time" , on_change=st.cache_data.clear() )
 
 
 # Query
