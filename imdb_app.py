@@ -1,6 +1,5 @@
 import streamlit as st
 from omdb_conn import OmdbAPIConnection
-from streamlit_extras.chart_container import chart_container
 import pandas as pd
 
 # title
@@ -38,7 +37,6 @@ with st.sidebar:
     st.session_state.add_page = st.checkbox("Add Page")
     with st.expander("Advanced"):
         st.session_state.full_info = st.checkbox("Full Information", help="You may have to clear the cache to see the changes" , on_change=st.cache_data.clear() )
-    st.write(st.session_state)
 
 query = f's={st.session_state.movie_name}'
 
@@ -55,17 +53,30 @@ if st.button('Search'):
     try:
         # Get results and display them
         df = omdb_conn.query(query, full_information=st.session_state.full_info)
-        st.data_editor(
-            df,
-            column_config={
-                
-            "Poster" : st.column_config.ImageColumn(
-                "Poster",
-                help="Poster"
-            )
-            }
-        )
+        tab1 , tab2 ,tab3 = st.tabs(["Data", "Raw Data", "Download Data"])
+        if tab1:
+            st.data_editor(
+                    df,
+                    column_config={
+                        
+                    "Poster" : st.column_config.ImageColumn(
+                        "Poster",
+                        help="Poster"
+                    )
+                    }
+                )
+        with tab2:
+            csv = df.to_csv(index=False)
+            st.code(csv, language="csv")
         
+        with tab3:
+            st.download_button(
+                label="Download Data",
+                data=csv,
+                file_name=f"{st.session_state.movie_name}_imdb_data.csv",
+                mime="text/csv",
+            )
+
         st.session_state.data = df
 
     except Exception as e:
