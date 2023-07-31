@@ -26,7 +26,7 @@ Uses the OMDB api to get data from IMDB in the form of a DataFrame
 
 ## Usage
 
-- query() Docstring
+- `query()` Docstring
 ```python
     Queries the API .
 
