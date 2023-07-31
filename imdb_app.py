@@ -48,12 +48,6 @@ if "add_y" not in st.session_state:
 if "add_page" not in st.session_state:
     st.session_state.add_page = False
 
-# read the api key from the secrets
-api = st.secrets["api_key"]
-
-# create an instance of OmdbAPIConnection
-omdb_conn = OmdbAPIConnection("IMDB Connection", api_key=api)
-
 # Build the UI
 # title
 colored_header(
@@ -87,11 +81,15 @@ with st.sidebar:
     st.session_state.add_page = st.checkbox("Filter Page")
     with st.expander("Advanced"):
         st.session_state.full_info = st.checkbox("Full Information", help="You may have to wait for some time" , on_change=st.cache_data.clear() )
-        if st.button("Clear Cache"):
+        if st.button("Clear Cache",use_container_width=True):
             st.cache_data.clear()
             st.cache_resource.clear()
 
 
+# read the api key from the secrets
+api = st.secrets["api_key"]
+# create an instance of OmdbAPIConnection
+omdb_conn = OmdbAPIConnection("IMDB Connection", api_key=api)
 # Query
 query = f's={st.session_state.movie_name}'
 if st.session_state.add_type:
@@ -108,6 +106,8 @@ if st.button('Search'):
     try:
         # Get results and display them
         df = omdb_conn.query(query, full_information=st.session_state.full_info)
+        # call the index col index
+        df.index.name = "Index"
         tab1 , tab2 ,tab3 = st.tabs(["Data", "Raw CSV Data", "Download Data as CSV"])
         if tab1:
             colored_header(
@@ -118,10 +118,9 @@ if st.button('Search'):
             st.data_editor(
                     df,
                     column_config={
-                        
                     "Poster" : st.column_config.ImageColumn(
                         "Poster",
-                        help="Poster"
+                        help="Double click to Increase the size of the image"
                     )
                     },
                     use_container_width=True,
@@ -145,6 +144,7 @@ if st.button('Search'):
 
 # Code
 with st.expander("Query Docstring"):
+    st.subheader("query()")
     st.code(omdb_conn.query.__doc__)
 
 with st.expander("OmdbAPIConnection Source Code"):
