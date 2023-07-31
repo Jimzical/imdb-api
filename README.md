@@ -26,7 +26,7 @@ Uses the OMDB api to get data from IMDB in the form of a DataFrame
 
 ## Usage
 
-- query() Docstring
+- `query()` Docstring
 ```python
     Queries the API .
 
@@ -50,7 +50,10 @@ Raises:
     Exception: If the API returns an error
 
 Examples:
+    >>> imdb_conn = st.experimental_connection("IMDB Connection", type=OmdbAPIConnection , api_key=api)
+    OR
     >>> imdb_conn = OmdbAPIConnection("IMDB Connection" , api_key = api)
+    
     >>> query = f's=Batman' # Search for Batman
     >>> df = imdb_conn.query(query)
 
