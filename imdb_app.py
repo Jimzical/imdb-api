@@ -108,8 +108,7 @@ if st.button('Search'):
     try:
         # Get results and display them
         df = omdb_conn.query(query, full_information=st.session_state.full_info)
-        # call the index col index
-        df.index.name = "Index"
+        df.set_index("Title", inplace=True)
         tab1 , tab2 ,tab3 = st.tabs(["Data", "Raw CSV Data", "Download Data as CSV"])
         if tab1:
             colored_header(
@@ -128,7 +127,7 @@ if st.button('Search'):
                     use_container_width=True,
                 )
         with tab2:
-            csv = df.to_csv(index=False)
+            csv = df.to_csv(index=True)
             st.code(csv, language="csv")
         
         with tab3:
