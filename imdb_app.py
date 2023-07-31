@@ -1,7 +1,7 @@
 import streamlit as st
 from omdb_conn import OmdbAPIConnection
 import pandas as pd
-
+from time import sleep
 
 def colored_header(label: str = "Nice title",description: str = "",color_name = "gold",help = "", description_help = " "):
     """
@@ -18,7 +18,35 @@ def colored_header(label: str = "Nice title",description: str = "",color_name = 
     )
     if description:
         st.caption(description,help=description_help)
+def Notif(type = "success",duration = 3, message = "None"):
+    '''
+    Shows a notification for a certain duration
 
+    Parameters
+    ----------
+    type : str, optional
+        The type of the notification, by default "success"
+    duration : int, optional
+        The duration of the notification, by default 3
+    message : str, optional
+        The message of the notification, by default "None"
+    '''
+    if message == "None":
+        message = type 
+
+    if type == "success":
+        notif = st.success(message)
+    elif type == "error":
+        notif = st.error(message)
+    elif type == "warning":
+        notif = st.warning(message)
+    elif type == "info":
+        notif = st.info(message)
+    else:
+        notif = st.write("Notif type not found")
+
+    sleep(duration)
+    notif.empty()
 
 # set page config
 st.set_page_config(
@@ -84,6 +112,7 @@ with st.sidebar:
         if st.button("Clear Cache",use_container_width=True):
             st.cache_data.clear()
             st.cache_resource.clear()
+            Notif(type="success",message="Cache Cleared")
 
 # Query
 # ------------------------------------------------------------------------------
