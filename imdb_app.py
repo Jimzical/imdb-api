@@ -85,11 +85,13 @@ with st.sidebar:
             st.cache_data.clear()
             st.cache_resource.clear()
 
-
+# Query
+# ------------------------------------------------------------------------------
 # read the api key from the secrets
 api = st.secrets["api_key"]
+
 # create an instance of OmdbAPIConnection
-omdb_conn = OmdbAPIConnection("IMDB Connection", api_key=api)
+omdb_conn = st.experimental_connection("IMDB Connection", type=OmdbAPIConnection , api_key=api)
 # Query
 query = f's={st.session_state.movie_name}'
 if st.session_state.add_type:
@@ -100,7 +102,7 @@ if st.session_state.add_page:
     query = query + f'&page={page}'
 
 st.markdown(f'**Your query:** `{query}`')
-
+# ---------------------------------------------------------------------------------------
 # Search Button
 if st.button('Search'):
     try:

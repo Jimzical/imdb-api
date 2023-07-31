@@ -80,7 +80,10 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
             Exception: If the API returns an error
 
         Examples:
-            >>> imdb_conn = OmdbAPIConnection("IMDB Connection" , api_key = api)
+            >>> omdb_conn = st.experimental_connection("IMDB Connection", type=OmdbAPIConnection , api_key=api)
+            OR
+            >>> omdb_conn = OmdbAPIConnection("IMDB Connection" , api_key = api)
+            
             >>> query = f's=Batman' # Search for Batman
             >>> df = imdb_conn.query(query)
 
