@@ -162,19 +162,21 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
                 if "Series" in query:
                     st.warning("Graphs are only available for Movies Currently")
                 else:
-                    df = df[df["Metascore"] != "N/A"]
-                    df = df[df["Runtime"] != "N/A"]
-                    df = df[df["Rated"] != "N/A"]
-                    df["Metascore"] = df["Metascore"].astype(int)
-                    df["imdbRating"] = df["imdbRating"].astype(float)
-                    df["imdbVotes"] = df["imdbVotes"].str.replace(",", "").astype(int)
+                    run_df = df[df["Runtime"] != "N/A"]
+                    meta_df = df[df["Metascore"] != "N/A"]
+                    rate_df = df[df["Rated"] != "N/A"]
+                    vote_df = df[df["imdbVotes"] != "N/A"]
+                    run_df["Runtime"] = run_df["Runtime"].str.replace(" min", "").astype(int)
+                    meta_df["Metascore"] = meta_df["Metascore"].astype(int)
+                    rate_df["imdbRating"] = rate_df["imdbRating"].astype(float)
+                    vote_df["imdbVotes"] = vote_df["imdbVotes"].str.replace(",", "").astype(int)
                     # create a df with rated and count
-                    rating_df = df.groupby("Rated").count()["imdbID"].astype(int).reset_index()
-                    rating_df.rename(columns={"imdbID": "Count"}, inplace=True)
-                    
+                    rated_df = df.groupby("Rated").count()["imdbID"].astype(int).reset_index()
+                    rated_df.rename(columns={"imdbID": "Count"}, inplace=True)
+                    rated_df = rated_df[rated_df["Rated"] != "N/A"]                    
                     st.subheader("Runtime")
                     plost.bar_chart(
-                        data=df,
+                        data=run_df,
                         bar="Title",
                         value="Runtime",
                         use_container_width=True,
@@ -185,7 +187,7 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
 
                     st.subheader("IMDB Ratings")
                     plost.bar_chart(
-                        data=df,
+                        data=rate_df,
                         bar="Title",
                         value="imdbRating",
                         use_container_width=True,
@@ -196,7 +198,7 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
 
                     st.subheader("IMDB Votes")
                     plost.bar_chart(
-                        data=df,
+                        data=vote_df,
                         bar="Title",
                         value="imdbVotes",
                         use_container_width=True,
@@ -207,7 +209,7 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
 
                     st.subheader("Metascore")
                     plost.bar_chart(
-                        data=df,
+                        data=meta_df,
                         bar="Title",
                         value="Metascore",
                         use_container_width=True,
@@ -218,7 +220,7 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
 
                     st.subheader("Entry Rated")
                     plost.bar_chart(
-                        data=rating_df,
+                        data=rated_df,
                         bar="Rated",
                         value="Count",
                         use_container_width=True,
@@ -226,10 +228,9 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
                         opacity=0.8,
                     )
                     st.divider()
-
-
             else:
                 st.warning("Please tick Full Information from Advanced Settings to Generate Graphs")
+       
         with tab2:
             csv = df.to_csv(index=True)
             st.code(csv, language="csv")

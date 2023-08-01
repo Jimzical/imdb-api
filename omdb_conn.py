@@ -142,13 +142,6 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
                             continue
                         else:
                             result.at[index, key] = json_response[key]
-            # change the values of each row in the column Runtime to remove the min
-            result["Runtime"] = result["Runtime"].str.replace(" min", "").astype(int)
-            # change the values of each row in the column imdbRating to float
-            result["imdbVotes"].str.replace(",","").astype(int)
-            # change the values of each row in the column imdbVotes to float
-            result["imdbRating"].astype(float)
-            
             return result
 
         return _query(query, **kwargs)
