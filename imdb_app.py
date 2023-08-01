@@ -203,7 +203,15 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
 
 # Code
 with st.expander("Query Docstring"):
-    st.subheader("query()")
+    # st.markdown("omdb_conn.querymethodomdb_conn.OmdbAPIConnection.query(query: str, cache_time: int = 3600, full_information=False, **kwargs: Any) -> pandas.core.frame.DataFrame")
+    st.code('''
+    omdb_conn.querymethodomdb_conn.OmdbAPIConnection.query(
+        query: str, 
+        cache_time: int = 3600, 
+        full_information=False, 
+        **kwargs: Any) -> pandas.core.frame.DataFrame
+    ''')
+    st.divider()
     st.code(omdb_conn.query.__doc__)
 
 with st.expander("OmdbAPIConnection Source Code"):
