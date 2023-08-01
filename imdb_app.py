@@ -2,7 +2,7 @@ import streamlit as st
 from omdb_conn import OmdbAPIConnection
 import pandas as pd
 from time import sleep
-
+import plost
 def colored_header(label: str = "Nice title",description: str = "",color_name = "gold",help = "", description_help = " "):
     """
     Shows a header with a colored underline and an optional description.
@@ -60,7 +60,6 @@ st.set_page_config(
         "About": " Using the st.experimental_connection to connect to the OMDB API for the Streamlit Hackathon",
     }
 )
-
 
 # initialize the session state
 if "data" not in st.session_state:
