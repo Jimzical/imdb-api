@@ -2,7 +2,7 @@ import streamlit as st
 from omdb_conn import OmdbAPIConnection
 import pandas as pd
 from time import sleep
-
+import plost
 def colored_header(label: str = "Nice title",description: str = "",color_name = "gold",help = "", description_help = " "):
     """
     Shows a header with a colored underline and an optional description.
@@ -60,7 +60,6 @@ st.set_page_config(
         "About": " Using the st.experimental_connection to connect to the OMDB API for the Streamlit Hackathon",
     }
 )
-
 
 # initialize the session state
 if "data" not in st.session_state:
@@ -137,7 +136,7 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
     try:
         # Get results and display them
         df = omdb_conn.query(query, full_information=st.session_state.full_info)
-        df.set_index("Title", inplace=True)
+        # df.set_index("Title", inplace=True)
         tab1 , tab2 ,tab3 = st.tabs(["Data", "Raw CSV Data", "Download Data as CSV"])
         if tab1:
             colored_header(
@@ -163,25 +162,72 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
                 if "Series" in query:
                     st.warning("Graphs are only available for Movies Currently")
                 else:
-                    st.subheader("Runtime")
-                    # filter out the N/A values
+                    df = df[df["Metascore"] != "N/A"]
                     df = df[df["Runtime"] != "N/A"]
-                    st.bar_chart(df[df["Type"] == "movie"]["Runtime"].str.replace(" min","").astype(int))
+                    df = df[df["Rated"] != "N/A"]
+                    df["Metascore"] = df["Metascore"].astype(int)
+                    df["imdbRating"] = df["imdbRating"].astype(float)
+                    df["imdbVotes"] = df["imdbVotes"].str.replace(",", "").astype(int)
+                    # create a df with rated and count
+                    rating_df = df.groupby("Rated").count()["imdbID"].astype(int).reset_index()
+                    rating_df.rename(columns={"imdbID": "Count"}, inplace=True)
+                    
+                    st.subheader("Runtime")
+                    plost.bar_chart(
+                        data=df,
+                        bar="Title",
+                        value="Runtime",
+                        use_container_width=True,
+                        color="Title",
+                        opacity=0.8,
+                    )
                     st.divider()
 
                     st.subheader("IMDB Ratings")
-                    st.bar_chart(df["imdbRating"].astype(float))
+                    plost.bar_chart(
+                        data=df,
+                        bar="Title",
+                        value="imdbRating",
+                        use_container_width=True,
+                        color="Title",
+                        opacity=0.8,
+                    )
                     st.divider()
 
                     st.subheader("IMDB Votes")
-                    st.bar_chart(df["imdbVotes"].str.replace(",","").astype(int))
+                    plost.bar_chart(
+                        data=df,
+                        bar="Title",
+                        value="imdbVotes",
+                        use_container_width=True,
+                        color="Title",
+                        opacity=0.8,
+                    )
                     st.divider()
 
-                    # filter out the N/A values
-                    df = df[df["Rated"] != "N/A"]
-                    st.subheader("Entry Rated")
-                    st.bar_chart(df.groupby("Rated").count()["imdbID"])
+                    st.subheader("Metascore")
+                    plost.bar_chart(
+                        data=df,
+                        bar="Title",
+                        value="Metascore",
+                        use_container_width=True,
+                        color="Title",
+                        opacity=0.8,
+                    )
                     st.divider()
+
+                    st.subheader("Entry Rated")
+                    plost.bar_chart(
+                        data=rating_df,
+                        bar="Rated",
+                        value="Count",
+                        use_container_width=True,
+                        color="Rated",
+                        opacity=0.8,
+                    )
+                    st.divider()
+
+
             else:
                 st.warning("Please tick Full Information from Advanced Settings to Generate Graphs")
         with tab2:
