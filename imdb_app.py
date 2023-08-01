@@ -157,24 +157,25 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
                 )
             if st.session_state.full_info:
                 with st.expander("Graphs",expanded=True):
-                    st.title("Graphs")
+                    if "Series" in query:
+                        st.warning("Graphs are only available for Movies Currently")
+                    else:
+                        st.title("Graphs")
+                        st.subheader("Runtime")
+                        st.bar_chart(df[df["Type"] == "movie"]["Runtime"].str.replace(" min","").astype(int))
+                        st.divider()
 
-                    st.subheader("Movies Runtime")
-                    st.bar_chart(df[df["Type"] == "movie"]["Runtime"].str.replace(" min","").astype(int))
-                    st.divider()
+                        st.subheader("IMDB Ratings")
+                        st.bar_chart(df["imdbRating"].astype(float))
+                        st.divider()
 
-                    st.subheader("Movies IMDB Ratings")
-                    st.bar_chart(df["imdbRating"].astype(float))
-                    st.divider()
+                        st.subheader("IMDB Votes")
+                        st.bar_chart(df["imdbVotes"].str.replace(",","").astype(int))
+                        st.divider()
 
-                    st.subheader("Movies IMDB Votes")
-                    st.bar_chart(df["imdbVotes"].str.replace(",","").astype(int))
-                    st.divider()
-
-                    st.subheader("Entry Rated")
-                    st.bar_chart(df.groupby("Rated").count()["imdbID"])
-                    st.divider()
-
+                        st.subheader("Entry Rated")
+                        st.bar_chart(df.groupby("Rated").count()["imdbID"])
+                        st.divider()
 
         with tab2:
             csv = df.to_csv(index=True)

@@ -138,7 +138,6 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
                             continue
                         else:
                             result.at[index, key] = json_response[key]
-
             return result
 
         return _query(query, **kwargs)
