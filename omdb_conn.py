@@ -124,8 +124,6 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
             else:
                 result = pd.DataFrame(json.loads(response.text)["Search"])
 
-            # make column Year as int
-            result["Year"] = result["Year"].astype(int)
 
             if full_information:
                 for index, row in result.iterrows():
