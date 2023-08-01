@@ -2,9 +2,7 @@
 
 [![hackathon](https://global.discourse-cdn.com/business7/uploads/streamlit/optimized/3X/d/6/d6e06e08c5eae258e58f8e71e9bb0db8c77a9db1_2_750x750.jpeg)](https://discuss.streamlit.io/t/connections-hackathon/47574)
 <br/>
-Made for the Streamlit Hackathon
-Uses the OMDB api to get data from IMDB in the form of a DataFrame
-<br/>
+> Uses the OMDB api to get data from IMDB in the form of a DataFrame
 
 ## How to Run Locally
 - Clone the repo
