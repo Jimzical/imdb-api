@@ -1,10 +1,10 @@
-# IMDB-api
-Made for the Streamlit Hackathon
+# IMDB-api  [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://imdb-api.streamlit.app/)
+
+[![hackathon](https://global.discourse-cdn.com/business7/uploads/streamlit/optimized/3X/d/6/d6e06e08c5eae258e58f8e71e9bb0db8c77a9db1_2_750x750.jpeg)](https://discuss.streamlit.io/t/connections-hackathon/47574)
 <br/>
+Made for the Streamlit Hackathon
 Uses the OMDB api to get data from IMDB in the form of a DataFrame
 <br/>
-<br/>
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://imdb-api.streamlit.app/)
 
 ## How to Run Locally
 - Clone the repo
@@ -23,6 +23,28 @@ Uses the OMDB api to get data from IMDB in the form of a DataFrame
 
 ## Screenshots
 ![Screenshot 1](https://github.com/Jimzical/imdb-api/blob/media/home.png)
+
+## Example Code
+```python
+import streamlit as st
+from omdb_conn import OmdbAPIConnection
+import pandas as pd
+
+# read the api key from the secrets
+api = st.secrets["api_key"]
+
+# create an instance of OmdbAPIConnection
+omdb_conn = st.experimental_connection("IMDB Connection", type=OmdbAPIConnection , api_key=api)
+
+# Query
+query = f's=batman&type=movie&page=2'
+
+# Get results and display them
+df = omdb_conn.query(query)
+
+st.title("OMDB Experimental Connector")
+st.dataframe(df)
+```
 
 ## Usage
 
