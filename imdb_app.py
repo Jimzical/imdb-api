@@ -136,7 +136,8 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
     try:
         # Get results and display them
         df = omdb_conn.query(query, full_information=st.session_state.full_info)
-        # df.set_index("Title", inplace=True)
+        df_copy = df.copy()
+        df_copy.set_index("Title", inplace=True)
         tab1 , tab2 ,tab3 = st.tabs(["Data", "Raw CSV Data", "Download Data as CSV"])
         if tab1:
             colored_header(
@@ -145,7 +146,7 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
                 help="The Dataframe with the results from the query"
             )                
             st.data_editor(
-                    df,
+                    df_copy,
                     column_config={
                     "Poster" : st.column_config.ImageColumn(
                         "Poster",
@@ -232,7 +233,7 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
                 st.warning("Please tick Full Information from Advanced Settings to Generate Graphs")
        
         with tab2:
-            csv = df.to_csv(index=True)
+            csv = df_copy.to_csv(index=True)
             st.code(csv, language="csv")
         
         with tab3:
