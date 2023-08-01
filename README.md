@@ -55,8 +55,15 @@ api_key = "YOUR_API_KEY"
 
 - `query()` Docstring
 ```python
-    Queries the API .
+omdb_conn.querymethodomdb_conn.OmdbAPIConnection.query(
+    query: str, 
+    cache_time: int = 3600, 
+    full_information=False, 
+    **kwargs: Any) -> pandas.core.frame.DataFrame
 
+---------------------------------------------------------------------------------------------------------------------------------------
+
+Queries the API .
 Parameters:
     query (str): The query string ["s={movie_name}"  Required] 
     {QueryFormat -> "s={movie_name}&type={movie/series/episode}&y={release_year}&page={page_number}"}
