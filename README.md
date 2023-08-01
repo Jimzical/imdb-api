@@ -25,6 +25,7 @@ Uses the OMDB api to get data from IMDB in the form of a DataFrame
 ![Screenshot 1](https://github.com/Jimzical/imdb-api/blob/media/home.png)
 
 ## Example Code
+- `example.py`
 ```python
 import streamlit as st
 from omdb_conn import OmdbAPIConnection
@@ -44,6 +45,12 @@ df = omdb_conn.query(query)
 
 st.title("OMDB Experimental Connector")
 st.dataframe(df)
+```
+
+- `.streamlit\secrets.toml`
+```toml
+api_key = "YOUR_API_KEY"
+
 ```
 
 ## Usage
