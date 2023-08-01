@@ -6,7 +6,7 @@ from streamlit.connections import ExperimentalBaseConnection
 from streamlit.runtime.caching import cache_data
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
-
+import time
 
 
 class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
@@ -62,7 +62,7 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
         
         Parameters:
             query (str): The query string ["s={movie_name}"  Required] 
-            {QueryFormat -> "s={movie_name}&type={movie/series/episode}&y={release_year}&page={page_number}"}
+            {QueryFormat -> "s={movie_name}&type={movie/episode}&y={release_year}&page={page_number}"}
             
             cache_time (int): The time to cache the data in seconds (Default: 3600)
 
@@ -124,6 +124,9 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
             else:
                 result = pd.DataFrame(json.loads(response.text)["Search"])
 
+            # make column Year as int
+            result["Year"] = result["Year"].astype(int)
+
             if full_information:
                 for index, row in result.iterrows():
                     params = {}
@@ -137,7 +140,6 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
                             continue
                         else:
                             result.at[index, key] = json_response[key]
-
 
             return result
 

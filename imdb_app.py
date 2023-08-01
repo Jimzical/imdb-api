@@ -101,14 +101,14 @@ with st.sidebar:
         description="Select the Parameters to Filter the Query",
         color_name="gold",
     )
-    type = st.selectbox("Type", ["Movie", "Series", "Episode"])
+    type = st.selectbox("Type", ["Movie", "Series"])
     st.session_state.add_type = st.checkbox("Filter Type")
     y = st.number_input("Year", value=2015, min_value=1800)
     st.session_state.add_y = st.checkbox("Filter Year")
     page = st.number_input("Page", value=1 , min_value=1, max_value=100)
     st.session_state.add_page = st.checkbox("Filter Page")
-    with st.expander("Advanced"):
-        st.session_state.full_info = st.checkbox("Full Information", help="You may have to wait for some time" , on_change=st.cache_data.clear() )
+    with st.expander("Advanced Settings",expanded=True):
+        st.session_state.full_info = st.checkbox("Full Information",value=True, help="This will also add Graphs" , on_change=st.cache_data.clear() )
         if st.button("Clear Cache",use_container_width=True):
             st.cache_data.clear()
             st.cache_resource.clear()
@@ -133,7 +133,7 @@ if st.session_state.add_page:
 st.markdown(f'**Your query:** `{query}`')
 # ---------------------------------------------------------------------------------------
 # Search Button
-if st.button('Search'):
+if st.button('Search',help="Tick Full Information from Advanced Settings to get all the info"):
     try:
         # Get results and display them
         df = omdb_conn.query(query, full_information=st.session_state.full_info)
@@ -155,6 +155,27 @@ if st.button('Search'):
                     },
                     use_container_width=True,
                 )
+            if st.session_state.full_info:
+                with st.expander("Graphs",expanded=True):
+                    st.title("Graphs")
+
+                    st.subheader("Movies Runtime")
+                    st.bar_chart(df[df["Type"] == "movie"]["Runtime"].str.replace(" min","").astype(int))
+                    st.divider()
+
+                    st.subheader("Movies IMDB Ratings")
+                    st.bar_chart(df["imdbRating"].astype(float))
+                    st.divider()
+
+                    st.subheader("Movies IMDB Votes")
+                    st.bar_chart(df["imdbVotes"].str.replace(",","").astype(int))
+                    st.divider()
+
+                    st.subheader("Entry Rated")
+                    st.bar_chart(df.groupby("Rated").count()["imdbID"])
+                    st.divider()
+
+
         with tab2:
             csv = df.to_csv(index=True)
             st.code(csv, language="csv")
