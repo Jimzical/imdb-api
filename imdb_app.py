@@ -108,7 +108,7 @@ with st.sidebar:
     page = st.number_input("Page", value=1 , min_value=1, max_value=100)
     st.session_state.add_page = st.checkbox("Filter Page")
     with st.expander("Advanced Settings",expanded=True):
-        st.session_state.full_info = st.checkbox("Full Information",value=True, help="This will also add Graphs" , on_change=st.cache_data.clear() )
+        st.session_state.full_info = st.checkbox("Full Information",value=True, help="You may have to wait some time" , on_change=st.cache_data.clear() )
         if st.button("Clear Cache",use_container_width=True):
             st.cache_data.clear()
             st.cache_resource.clear()
@@ -155,28 +155,35 @@ if st.button('Search',help="Tick Full Information from Advanced Settings to get 
                     },
                     use_container_width=True,
                 )
+        with st.expander("Graphs",expanded=True):
+            st.title("Graphs")
+            st.divider()
+
             if st.session_state.full_info:
-                with st.expander("Graphs",expanded=True):
-                    if "Series" in query:
-                        st.warning("Graphs are only available for Movies Currently")
-                    else:
-                        st.title("Graphs")
-                        st.subheader("Runtime")
-                        st.bar_chart(df[df["Type"] == "movie"]["Runtime"].str.replace(" min","").astype(int))
-                        st.divider()
+                if "Series" in query:
+                    st.warning("Graphs are only available for Movies Currently")
+                else:
+                    st.subheader("Runtime")
+                    # filter out the N/A values
+                    df = df[df["Runtime"] != "N/A"]
+                    st.bar_chart(df[df["Type"] == "movie"]["Runtime"].str.replace(" min","").astype(int))
+                    st.divider()
 
-                        st.subheader("IMDB Ratings")
-                        st.bar_chart(df["imdbRating"].astype(float))
-                        st.divider()
+                    st.subheader("IMDB Ratings")
+                    st.bar_chart(df["imdbRating"].astype(float))
+                    st.divider()
 
-                        st.subheader("IMDB Votes")
-                        st.bar_chart(df["imdbVotes"].str.replace(",","").astype(int))
-                        st.divider()
+                    st.subheader("IMDB Votes")
+                    st.bar_chart(df["imdbVotes"].str.replace(",","").astype(int))
+                    st.divider()
 
-                        st.subheader("Entry Rated")
-                        st.bar_chart(df.groupby("Rated").count()["imdbID"])
-                        st.divider()
-
+                    # filter out the N/A values
+                    df = df[df["Rated"] != "N/A"]
+                    st.subheader("Entry Rated")
+                    st.bar_chart(df.groupby("Rated").count()["imdbID"])
+                    st.divider()
+            else:
+                st.warning("Please tick Full Information from Advanced Settings to Generate Graphs")
         with tab2:
             csv = df.to_csv(index=True)
             st.code(csv, language="csv")

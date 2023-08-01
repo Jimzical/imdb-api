@@ -111,6 +111,10 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
 
         @cache_data(ttl=cache_time)
         def _query(search: str, **kwargs: Any) -> pd.DataFrame:
+            """Queries the API and returns the results in a dataframe"""
+            # remove any unwanted spaces before and after the query
+            search =search.strip() 
+            
             url = (
                 self.base_url + "?apikey=" + self.api_key + "&" + search
             )
