@@ -50,6 +50,10 @@ class OmdbAPIConnection(ExperimentalBaseConnection[requests.Session]):
         session.mount("https://", HTTPAdapter(max_retries=self.retries))
         return session
 
+    def cursor(self, **kwargs: Any) -> requests.Session:
+        """Returns the session"""
+        return self._instance
+
     def query(
         self, 
         query: str, 

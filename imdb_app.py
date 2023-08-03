@@ -89,9 +89,6 @@ st.markdown(
     , unsafe_allow_html=True
 )
 
-# Movie Name
-st.session_state.movie_name = st.text_input("Movie Name", value="Batman")
-
 # Filters
 with st.sidebar:
     colored_header(
@@ -115,6 +112,15 @@ with st.sidebar:
 
 # Query
 # ------------------------------------------------------------------------------
+# Movie Name
+st.session_state.movie_name = st.text_input(
+                                    "Movie Name", 
+                                    value="Batman",
+                                    placeholder="Enter the Name of the Movie/Series you want to Search for",
+                                    max_chars=100,
+                                    help="Enter the Name of the Movie you want to Search for",
+                                    )
+
 # read the api key from the secrets
 api = st.secrets["api_key"]
 
